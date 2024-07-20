@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kaleidoscope Playlist - Drag and Drop mp3 Infinite Visual Music Journey</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <canvas id="visualizer"></canvas>
+
+    <div id="controls">
+        <button id="playPause">Play</button>
+        <input type="range" id="volume" min="0" max="1" step="0.1" value="0.5">
+        <select id="station">
+            <option value="https://s3-us-west-2.amazonaws.com/s.cdpn.io/308622/Leo%20-%20Trying.mp3">Leo - Trying</option>
+            <option value="https://s3-us-west-2.amazonaws.com/s.cdpn.io/308622/Post%20Malone%20-%20rockstar%20ft.%2021%20Savage%20(1).mp3">Post Malone - rockstar</option>
+            <option value="https://s3-us-west-2.amazonaws.com/s.cdpn.io/308622/NF%20-%20Let%20You%20Down.mp3">NF - Let You Down</option>
+            <option value="https://s3-us-west-2.amazonaws.com/s.cdpn.io/308622/Marshmello%20-%20Silence%20ft.%20Khalid.mp3">Marshmello Khalid - Silence</option>
+        </select>
+    </div>
+
+    <div id="menu">
+        <h3>Fractal Settings</h3>
+        <div class="control">
+            <label for="iterations">Detail:</label>
+            <input type="range" id="iterations" min="50" max="500" value="200" step="10">
+        </div>
+        <div class="control">
+            <label for="zoom">Zoom:</label>
+            <input type="range" id="zoom" min="0.1" max="2" value="1" step="0.1">
+        </div>
+        <div class="control">
+            <label for="speed">Speed:</label>
+            <input type="range" id="speed" min="0.1" max="2" value="1" step="0.1">
+        </div>
+        <div class="control">
+            <label for="audioReactivity">Audio Reactivity:</label>
+            <input type="range" id="audioReactivity" min="0" max="2" value="1" step="0.1">
+        </div>
+        <div class="control">
+            <label for="kaleidoscopeSegments">Kaleidoscope Segments:</label>
+            <input type="range" id="kaleidoscopeSegments" min="2" max="12" value="6" step="1">
+        </div>
+    </div>
+
+    <div id="playlist">
+        <h3>Infinite Playlist</h3>
+        <ul id="playlist-items"></ul>
+    </div>
+
+    <div id="drop-zone">Drop audio files anywhere to add to playlist</div>
+
+    <input type="file" id="fileInput" style="display: none;" accept="audio/*" multiple>
+
+    <script src="script.js"></script>
+</body>
+</html>
