@@ -333,36 +333,61 @@ function handleDrop(e) {
     handleFiles(files);
 }
 
-function handleFileSelect(event) {
-    const files = event.target.files;
-    handleFiles(files);
-}
-
-fileInput.addEventListener('change', handleFileSelect);
-
 function handleFiles(files) {
     ([...files]).forEach(uploadFile);
 }
 
-// Touch events for tablets
+// Touch events for tablets and mobile devices
 let touchStartY = 0;
-let touchEndY = 0;
+let touchStartX = 0;
+let isSwiping = false;
 
 document.body.addEventListener('touchstart', (e) => {
-    touchStartY = e.changedTouches[0].screenY;
+    touchStartY = e.touches[0].clientY;
+    touchStartX = e.touches[0].clientX;
+    isSwiping = true;
+}, { passive: false });
+
+document.body.addEventListener('touchmove', (e) => {
+    if (!isSwiping) return;
+    
+    const touch
+    document.body.addEventListener('touchmove', (e) => {
+    if (!isSwiping) return;
+    
+    const touchEndY = e.touches[0].clientY;
+    const touchEndX = e.touches[0].clientX;
+    
+    const deltaY = touchStartY - touchEndY;
+    const deltaX = Math.abs(touchStartX - touchEndX);
+    
+    // Check if the swipe is more vertical than horizontal
+    if (deltaY > 50 && deltaY > deltaX) {
+        isSwiping = false;
+        handleSwipe(deltaY);
+        e.preventDefault(); // Prevent scrolling
+    }
+}, { passive: false });
+
+document.body.addEventListener('touchend', () => {
+    isSwiping = false;
 });
 
-document.body.addEventListener('touchend', (e) => {
-    touchEndY = e.changedTouches[0].screenY;
-    handleSwipe();
-});
-
-function handleSwipe() {
-    const swipeDistance = touchStartY - touchEndY;
+function handleSwipe(swipeDistance) {
     if (swipeDistance > 100) {  // Adjust this value to change swipe sensitivity
-        fileInput.click();
+        showMessage('Opening file selector...');
+        setTimeout(() => {
+            fileInput.click();
+        }, 100); // Small delay to ensure the message is shown
     }
 }
+
+// Modify the fileInput event listener
+fileInput.addEventListener('change', (event) => {
+    handleFiles(event.target.files);
+    // Reset the file input value to allow selecting the same file again
+    event.target.value = '';
+});
 
 function uploadFile(file) {
     if (file.type.startsWith('audio/')) {
@@ -452,8 +477,40 @@ function showMessage(message, duration = 3000) {
     }, duration);
 }
 
+// Add this function to check if the device is iOS
+function isIOS() {
+    return [
+        'iPad Simulator',
+        'iPhone Simulator',
+        'iPod Simulator',
+        'iPad',
+        'iPhone',
+        'iPod'
+    ].includes(navigator.platform)
+    // iPad on iOS 13 detection
+    || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
+}
+
+// Modify the showInitialMessage function
 function showInitialMessage() {
-    showMessage('Swipe up to add audio files', 5000);
+    if (isIOS()) {
+        showMessage('Tap "Choose Files" to add audio files', 5000);
+    } else {
+        showMessage('Swipe up to add audio files', 5000);
+    }
+}
+
+// Add a visible button for iOS devices
+if (isIOS()) {
+    const iosButton = document.createElement('button');
+    iosButton.textContent = 'Choose Files';
+    iosButton.style.position = 'fixed';
+    iosButton.style.bottom = '20px';
+    iosButton.style.left = '50%';
+    iosButton.style.transform = 'translateX(-50%)';
+    iosButton.style.zIndex = '2000';
+    iosButton.addEventListener('click', () => fileInput.click());
+    document.body.appendChild(iosButton);
 }
 
 // Optimized animation loop
