@@ -467,7 +467,31 @@ function animationLoop(currentTime) {
     draw(currentTime);
     requestAnimationFrame(animationLoop);
 }
+// Add this to your JavaScript file, preferably in the initial setup or DOM ready section
 
+document.addEventListener('DOMContentLoaded', function() {
+    const playlistHeader = document.querySelector('#playlist h3');
+    if (playlistHeader) {
+        playlistHeader.style.cursor = 'pointer'; // Change cursor to indicate it's clickable
+        playlistHeader.title = 'Click to add files'; // Add a tooltip
+
+        playlistHeader.addEventListener('click', function() {
+            showMessage('Opening file selector...');
+            setTimeout(() => {
+                fileInput.click();
+            }, 100);
+        });
+
+        // Optional: Add keyboard accessibility
+        playlistHeader.setAttribute('tabindex', '0'); // Make it focusable
+        playlistHeader.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                this.click(); // Trigger the click event
+            }
+        });
+    }
+});
 // Initial setup
 window.addEventListener('load', () => {
     shufflePlaylist();
