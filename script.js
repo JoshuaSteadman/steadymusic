@@ -357,33 +357,10 @@ document.body.addEventListener('touchend', (e) => {
     handleSwipe();
 });
 
-function handleSwipe(swipeDistance) {
-    // Adjust this threshold value as needed
-    const swipeThreshold = 50;
-
-    if (swipeDistance > swipeThreshold) {
-        showMessage('Opening file selector...');
-
-        // Use the new iOS detection logic
-        var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-
-        setTimeout(() => {
-            if (isIOS) {
-                console.log('This is an iOS device');
-                // For iOS, we'll use a custom approach
-                const iosButton = document.querySelector('.ios-file-button');
-                if (iosButton) {
-                    iosButton.click();
-                } else {
-                    // Fallback to default file input if iOS button doesn't exist
-                    fileInput.click();
-                }
-            } else {
-                console.log('This is not an iOS device');
-                // For non-iOS devices, use the file input directly
-                fileInput.click();
-            }
-        }, 100);
+function handleSwipe() {
+    const swipeDistance = touchStartY - touchEndY;
+    if (swipeDistance > 50) {  // Adjust this value to change swipe sensitivity
+        fileInput.click();
     }
 }
 
